@@ -12,9 +12,9 @@ router.post('/posts/:postId/comment', (req, res, next) => {
   const { postId } = req.params;
   const { author, content } = req.body;
 
-  User.find( {username: author} )
+  User.findOne( {username: author} )
     .then( userFromDB => {
-      if( userFromDB.length) {
+      if( userFromDB) {
         // Create comment
         return Comment.create( {author: userFromDB._id, content});
       } else {
