@@ -30,7 +30,7 @@ router.post('/posts/:postId/comment', (req, res, next) => {
       );
     })
     .then( postFromDB => {
-      res.render('posts/details', postFromDB);
+      res.redirect(`/posts/${postFromDB._id}`);
     })
     .catch(err => {
       console.log(`Err publishing comment: ${err}`);

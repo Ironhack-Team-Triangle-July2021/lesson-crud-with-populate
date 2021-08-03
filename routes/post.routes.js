@@ -58,13 +58,25 @@ router.get("/posts", (req, res) => {
 // ****************************************************************************************
 
 
-router.get("/posts/:postId", (req, res) => {
-  const {postId} = req.params;
+router.get("/posts/:postId", (req, res, next) => {
+  const { postId } = req.params;
+
   Post.findById(postId)
-    .populate('author')
-    .then( dbPost => {
-      res.render("posts/details", dbPost);
+    .populate('author comments')
+    .populate({
+      path: 'comments',
+      populate: {
+        path: 'author',
+        model: 'User'
+      }
     })
+    .then((foundPost) => {
+      res.render("posts/details", foundPost)
+    })
+    .catch((err) => {
+      console.log(`Err while getting a single post from the  DB: ${err}`);
+      next(err);
+    });
 });
 
 
